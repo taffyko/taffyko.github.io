@@ -43,12 +43,14 @@
 		.main-wrapper {
 			margin: 0 auto;
 			overflow-x: hidden;
+			height: 100vh;
 			padding-bottom: 5em;
+			background-color: var(--bg);
+			animation: 2s cubic-bezier(0.05, 0.5, 1, 1) 0.25s 1 normal both var(--play-state) brightness;
 		}
 		main {
 			transform-origin: center;
 			animation:
-				2s cubic-bezier(0.05, 0.5, 1, 1) 0.25s 1 normal both var(--play-state) brightness,
 				2s cubic-bezier(0, 1, 0, 1) 0.25s 1 normal both var(--play-state) scale;
 		}
 		@keyframes brightness {
@@ -81,9 +83,15 @@
 			transition: transform 1s cubic-bezier(0, 0, 0, 1.1);
 			border-radius: 3em;
 		}
-		a[href]:hover {
+		a[href]:hover, a[href]:focus-visible {
 			transform: scale(1.25);
 			transition: transform 0.1s cubic-bezier(0, 0, 0, 2);
+		}
+		a[href]:focus-visible {
+			border-radius: 0.25em;
+			background-color: var(--bg);
+			z-index: 1;
+			outline: var(--fg) solid 1px;
 		}
 		img {
 			filter: invert(98%) sepia(1%) saturate(8%) hue-rotate(307deg) brightness(115%) contrast(86%);
@@ -96,7 +104,7 @@
 				border-width 0.1s linear,
 				border-radius 0.2s linear;
 		}
-		a[href]:active img {
+		a[href]:active img, a[href].active img {
 			animation: flicker 0.1s infinite;
 			transition:
 				border-width 1s cubic-bezier(0, 1, 0, 1),
@@ -108,12 +116,16 @@
 			from { opacity: 1.0; }
 			to { opacity: 0.9; }
 		}
-		.link-group {
+		a.link-group {
 			display: inline-flex;
 			flex-flow: column nowrap;
 			justify-content: center;
 			align-items: center;
+			padding: 0.2em;
 			gap: 0.2em;
+		}
+		a.link-group:hover {
+			transition: transform 0.1s cubic-bezier(0, 0, 0, 1.18);
 		}
 		.title {
 			isolation: isolate;
@@ -161,6 +173,7 @@
 				<a href="https://twitter.com/tafffyko"><img alt="twitter.com" draggable="false" src="/assets/twitter.svg"></a>
 				<a href="https://www.tumblr.com/taffyko"><img alt="tumblr.com" draggable="false" src="/assets/tumblr.svg"></a>
 				<a href="https://mastodon.social/@taffyko"><img alt="mastodon" draggable="false" src="/assets/mastodon.svg"></a>
+				<a href="https://bsky.app/profile/taffyko.bsky.social"><img alt="bluesky" draggable="false" src="/assets/bluesky.svg"></a>
 				<a href="https://cohost.org/taffyko"><img alt="cohost.org" draggable="false" src="/assets/cohost.svg"></a>
 				<a href="https://www.tiktok.com/@taffyko"><img alt="tiktok.com" draggable="false" src="/assets/tiktok.svg"></a>
 				<a href="https://taffyko.newgrounds.com/"><img alt="newgrounds.com" draggable="false" src="/assets/newgrounds.svg"></a>
@@ -182,6 +195,18 @@
 		requestAnimationFrame(() => {
 			window.scrollTo(0, 0);
 			document.documentElement.style.setProperty('--play-state', 'running');
+		});
+		document.querySelectorAll("a[href]").forEach(el => {
+			el.addEventListener('keydown', e => {
+				if (e.code === 'Enter') {
+					el.classList.add('active');
+				}
+			});
+			el.addEventListener('keyup', e => {
+				if (e.code === 'Enter') {
+					el.classList.remove('active');
+				}
+			});
 		});
 	</script>
 </body>
